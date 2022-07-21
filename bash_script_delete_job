@@ -1,0 +1,38 @@
+ 
+del_bypass_jobs()
+{
+ 
+#DECLARTION OF STATIC ARRAYS WITH TWO ARRAYS arrsA has schedule ABC, arrsB has schedule DEF
+ 
+arrsA=(joba jobB jobC)
+arrsB=(DEFjob pqr_job hfg_job)
+count_exit=0
+ 
+for itema in ${arrsA[*]}
+do
+        printf " %s\n" $itema
+        order_id=`ctmpsm -listall ALLFIELDS | grep $itema | awk '{print $1 }'`
+        if [ ! -z "$order_id" ]; then
+           ctmpsm -updateajf "$order_id" HOLD && ctmpsm -updateajf "$order_id" DELETE
+        else
+           printf "%s\n" $itema "Failed to hold and Delete"
+           count_exit=`expr $count_exit + 1`
+        fi
+ 
+done
+ 
+for itemb in ${arrsB[*]}
+do
+        printf " %s\n" $itemb
+        order_id=`ctmpsm -listall ALLFIELDS | grep $itemb | awk '{print $1 }'`
+        if [ ! -z "$order_id" ]; then
+           ctmpsm -updateajf "$order_id" HOLD && ctmpsm -updateajf "$order_id" DELETE
+        else
+           printf "%s\n" $itemb "Failed to hold and Delete"
+           count_exit=`expr $count_exit + 1`
+        fi
+done
+return count_exit
+}
+ 
+del_bypass_jobs
